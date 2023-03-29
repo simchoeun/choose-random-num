@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>number guess game test</title>
+</head>
+
+<body>
+    <h1>숫자 맞추기 게임!</h1>
+    <p id="desc">숫자를 입력하세요</p>
+    <p id="chanceText">남은 기회 : 5번</p>
+    <input type="number" id="inputNum"/>
+    <button type="button" id="goBtn">GO</button>
+    <button type="button" id="resetBtn">RESET</button>
+
+    <script>
+        let resultNum = 0;
+        let inputNum = document.getElementById('inputNum');
+        let desc = document.getElementById('desc');
+        let chanceText = document.getElementById('chanceText');
+        let goBtn = document.getElementById('goBtn');
+        let resetBtn = document.getElementById('resetBtn');
+        let chance = 5;
+        let history = [];
+        
+
+        goBtn.addEventListener('click', play);
+        resetBtn.addEventListener('click', reset);
+        inputNum.addEventListener('focus', function() {
+            inputNum.value = '';
+        });
+
+        function randomNum() {
+            resultNum = Math.floor(Math.random() * 100) + 1;
+            console.log('정답: ',resultNum);
+        }  
+        randomNum();
+
+        function play() {
+            let userValue = inputNum.value;
+            
+            if (userValue < 1 || userValue > 100) {
+                desc.textContent = '범위 밖의 숫자입니다. 다시 입력해주세요.'
+                return;
+            }
+
+            if (history.includes(userValue)) {
+                desc.textContent = '중복된 숫자입니다. 다시 입력해주세요.'
+                return;
+            }
+
+            chance--;
+            chanceText.textContent = `남은 기회 : ${chance}번`;
+            
+            if (chance == 0) {
+                goBtn.disabled = true;
+            }
+            
+            if (userValue < resultNum) {
+                desc.textContent = 'UP!!';
+            } else if (userValue > resultNum) {
+                desc.textContent = 'DOWN!!';
+            } else {
+                desc.textContent = '성공!!';
+                goBtn.disabled = true;
+            }
+
+            history.push(userValue);
+        }
+
+        function reset() {
+            inputNum.value = '';
+            chance = 5;
+            chanceText.textContent = `남은 기회 : ${chance}번`;
+            goBtn.disabled = false;
+        }
+
+    </script>
+</body>
+
+</html>
